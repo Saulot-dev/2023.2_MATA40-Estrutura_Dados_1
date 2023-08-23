@@ -173,14 +173,21 @@ np.genfromtxt("teste.csv", delimiter=',')
 #Noções básicas de POO para se ter idéia de como trabalharemos com Estrutura de dados
 #Atributos e métodos(funções)
 
+#--Instancia é trazer do abstrato para o concreto--
 class robo:
     def __init__(self):
         self.id = ""
+        self.amigo = None
     def define_id(self, i):
         self.id = i
-    #--Instancia é trazer dp anstratp ára p cpmcretp--
     def mostra_id(self):
-        print(self.id)
+        return self.id
+    def define_amigo(self, a):
+        self.amigo = a
+    def mostra_amigo():
+        return self.amigo.mostra_id()
 saulo = robo()
+paulo = robo()
 saulo.define_id("Saulo")
-saulo.mostra_id()
+paulo.define_id("Paulo")
+saulo.
