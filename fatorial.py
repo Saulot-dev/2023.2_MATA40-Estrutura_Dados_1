@@ -1,5 +1,13 @@
 import numpy as np
+
+#import do sys:
+    #dá pra uma funcao chamar a outra, já passando os parametros de maneira mais rápida, por aí...;
+    
 import sys
+
+#Implementaçao de Recursividade:
+    #Primeira coisa é definir o "caso base";
+    
 
 def fat(n): # recursividade
     if n == 1: #case base | condição de parada
@@ -17,7 +25,29 @@ def fatorial(n): # O(n)
 
     return resultado
 
+# duvida:
+    # recursividade ajuda, em C, na questao de alocaçao e liberaçao de memória? Respondida;
+    # Estratégia linear;
+    
 
+
+def fib1(n):
+    resultado = 0
+    
+    if n == 0:
+        return 0
+    elif n == 1:
+        return 1;
+    else:
+        resultado = fib(n-1) + fib(n-2)
+
+def fib2(n):
+    proximo = 0
+    ultimo = 1
+    penultimo = 0
+    
+    
+    
 def main(): #função principal do nosso código
     n = int(sys.argv[1])
     print(f"Fatorial de {n} = {fatorial(n)}")
