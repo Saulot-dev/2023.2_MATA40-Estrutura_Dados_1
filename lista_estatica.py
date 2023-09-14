@@ -28,20 +28,24 @@ class Lista:
 
     def limpar(self):
         self.tam = 0
+    
+    def remover(self, n):
+        #presumindo que n < self.tam
+        for i in np.arange(n, self.tam-1, 1):
+            self.elems[i] = self.elems[i+1]
+        self.tam -= 1
 
 def main():
     n = int(sys.argv[1])
     l = Lista(n)
-    l.isEmpty()
     l.inserir(5)
-    l.inserir(10)
     l.inserir(15)
-    l.inserir(20)
-    l.isEmpty()
+    l.inserir(25)
+    l.inserir(35)
+    print(l.tam)
+    l.remover(1)
     l.imprimir()
-    l.limpar()
-    l.isEmpty()
-    l.imprimir()
+    print(l.tam)
 
 if __name__ == "__main__":
     main()
