@@ -26,6 +26,17 @@ class Lista:
             self.elems[self.tam] = e
             self.tam += 1
 
+    def insere_index(self, index, e):
+        #assumindo que self.tam < self.max
+        if self.tam < self.max:
+            self.tam += 1
+        if index < self.max:
+            for i in np.arange(self.tam-1, index, -1):
+                self.elems[i]= self.elems[i-1]
+            self.elems[index] = e
+        else:
+            print("Invalid index. Out of range")
+        
     def limpar(self):
         self.tam = 0
     
@@ -36,20 +47,15 @@ class Lista:
         self.tam -= 1
 
 def main():
-    n = int(sys.argv[1])
-    l = Lista(n)
+    l = Lista(5)
     l.inserir(5)
     l.inserir(15)
     l.inserir(25)
     l.inserir(35)
-    print(l.tam)
-    l.remover(1)
+    l.insere_index(10, 10)
     l.imprimir()
-    print(l.tam)
+    
+
 
 if __name__ == "__main__":
     main()
-
-
-
-
