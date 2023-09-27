@@ -1,0 +1,47 @@
+class No:
+    def __init__(self, v):
+        self.valor = v
+        self.prox = None
+
+    def imprimir(self):
+        return(f"Valor: {self.valor}")
+
+class Lista:
+    def __init__(self):
+        self.head = None
+
+    def inserir(self, n):
+        if self.head == None:
+            self.head = n
+        else:
+            n.prox = self.head
+            self.head = n
+
+    def imprimir(self):
+        if self.head == None:
+            print("Lista vazia")
+        else:
+            temp = self.head
+            while temp != None:
+                print(temp.imprimir())
+                temp = temp.prox
+
+def main():
+    l = Lista()
+    l.imprimir()
+    l.inserir(No(10))
+    l.inserir(No(100))
+    l.inserir(No(1000))
+    l.imprimir()
+
+if __name__ == "__main__":
+    main()
+            
+
+
+
+
+
+
+
+
