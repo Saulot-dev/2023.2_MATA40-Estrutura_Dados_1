@@ -12,11 +12,12 @@ def fib(n):
     else:
         return fib(n-1)+fib(n-2)
 
-def main():
-    n = int(sys.argv[1])
-    print(f"Fib({n}) = {fib(n)}")
 
+n = int(input())
+print(f"Fib({n}) = {fib(n)}")
+
+'''
 if __name__ == '__main__':
     main()
 
-
+'''
