@@ -48,22 +48,39 @@ def main():
 
 print(main())
 '''
-Esta ideia tá ruim
+'''
+# Fibonacci
+
 n = int(input()) #  0<=n<=25
-def fib(n_atual, n, x):
-    if n == 1:
-        return 0
-    elif n == 2:
-        return 1
-    if x == 0: # n > 2, entao iniciam-se n_atual e x
-        n_atual = 3
-        x_ant = 0
-        x_atual = 1
-    if n_atual == n:
-        return x + n_atual
-    fib(n_atual+1, n, x_atual, x_atual)
-
-print(fib(0, n, 0))
-    
-
-
+match [n == 0, n == 1, n >= 2]:
+    case [True, False, False]:
+        fib = 0
+        print(fib)
+    case [False, True, False]:
+        fib = 1
+        print(fib)
+    case [False, False, True]: 
+        ant = 0
+        prox = 1       
+        for i in range(2, n+1, 1):
+            fib = ant + prox
+            ant = prox
+            prox = fib
+        print(fib)
+'''
+# ALg aceito pelo jude
+n = int(input())
+if n == 0:
+    fib = 0
+    print(fib)
+if n == 1:
+    fib = 1
+    print(fib)
+if n >= 2:
+    ant = 0
+    prox = 1       
+    for i in range(2, n+1, 1):
+        fib = ant + prox
+        ant = prox
+        prox = fib
+    print(fib)
