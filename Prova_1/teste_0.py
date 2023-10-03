@@ -1,5 +1,7 @@
 import numpy as np
 
+'''
+# Questao 1 - inverte lista
 class No:
     def __init__(self, v):
         self.id = v
@@ -85,3 +87,81 @@ for i in np.arange(0, R, 1):
     l.remove(X)
     #l.display()
 l.display()
+
+'''
+
+'''
+#Está funcionando, porem acusando tempo limite excedido
+#Farei sem head e tail
+class Letra:
+    def __init__(self, crypt, rom):
+        self.id = crypt
+        self.roman = rom
+        self.prev = None
+        self.next = None
+
+class Alfabet:
+    def __init__(self):
+        self.head = self.new_list("head")
+        self.tail = self.new_list("tail")
+        self.head.next = self.tail
+        self.head.prev = self.tail
+        self.tail.next = self.head
+        self.tail.prev = self.head
+        
+    def new_list(self, id):
+        return Letra(id, "")
+
+    def append(self, item):
+        if self.head.next == self.tail:
+            self.head.next = item
+            item.next = self.tail
+            item.prev = self.head
+            self.tail.prev = item
+        else:
+            penultimo = self.tail.prev
+            penultimo.next = item
+            item.prev = penultimo
+            item.next = self.tail
+            self.tail.prev = item
+            
+    def free_list(self):
+        self.head = None
+        self.tail = None
+        
+    def decifra(self, pal_cifra, chave):
+        letra = self.head.next
+        decifrada = ""
+        for i in pal_cifra:
+            while letra.id != i:
+                letra = letra.next
+            for j in np.arange(0, chave):
+                letra = letra.prev
+            decifrada += letra.roman
+        return decifrada
+        
+    def cifra(self, pal_roman, chave):
+        letra = self.head.next
+        cifrada = ""
+        for i in pal_roman:
+            while letra.roman != i:
+                letra = letra.next
+            for j in np.arange(0, chave):
+                letra = letra.next
+            cifrada += letra.id
+        return cifrada
+        
+
+alfabeto = Alfabet()
+for i in np.arange(0, 26):
+    id, r = input().split()
+    letra = Letra(id, r)
+    alfabeto.append(letra)
+
+chave = int(input())
+pal_cifrada = input()
+print(alfabeto.decifra(pal_cifrada, chave))
+pal_romana = input()
+print(alfabeto.cifra(pal_romana, chave))
+
+'''
