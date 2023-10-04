@@ -1,7 +1,6 @@
 import numpy as np
 
-'''
-# Questao 1 - inverte lista
+''' # Questao 1 - inverte lista
 class No:
     def __init__(self, v):
         self.id = v
@@ -90,10 +89,8 @@ l.display()
 
 '''
 
-'''
-#Está funcionando, porem acusando tempo limite excedido
-#Farei sem head e tail
-class Letra:
+''' # Questao 2 - Mensagens Criptografadas
+class Letra: 
     def __init__(self, crypt, rom):
         self.id = crypt
         self.roman = rom
@@ -102,35 +99,36 @@ class Letra:
 
 class Alfabet:
     def __init__(self):
-        self.head = self.new_list("head")
-        self.tail = self.new_list("tail")
-        self.head.next = self.tail
-        self.head.prev = self.tail
-        self.tail.next = self.head
-        self.tail.prev = self.head
+        self.head = self.new_list()
         
-    def new_list(self, id):
-        return Letra(id, "")
+    def new_list(self):
+        return None
 
-    def append(self, item):
-        if self.head.next == self.tail:
-            self.head.next = item
-            item.next = self.tail
-            item.prev = self.head
-            self.tail.prev = item
+    def append(self, letra):
+        if self.head == None:
+            self.head = letra
+            letra.next = letra
+            letra.prev = letra
         else:
-            penultimo = self.tail.prev
-            penultimo.next = item
-            item.prev = penultimo
-            item.next = self.tail
-            self.tail.prev = item
+            if self.head.next == self.head:
+                self.head.next = letra
+                self.head.prev = letra
+                letra.prev = self.head
+                letra.next = self.head
+            else:
+                tmp = self.head
+                while tmp.next != self.head:
+                    tmp = tmp.next
+                tmp.next = letra
+                self.head.prev = letra
+                letra.next = self.head
+                letra.prev = tmp
             
     def free_list(self):
         self.head = None
-        self.tail = None
         
     def decifra(self, pal_cifra, chave):
-        letra = self.head.next
+        letra = self.head
         decifrada = ""
         for i in pal_cifra:
             while letra.id != i:
@@ -141,7 +139,7 @@ class Alfabet:
         return decifrada
         
     def cifra(self, pal_roman, chave):
-        letra = self.head.next
+        letra = self.head
         cifrada = ""
         for i in pal_roman:
             while letra.roman != i:
@@ -163,5 +161,78 @@ pal_cifrada = input()
 print(alfabeto.decifra(pal_cifrada, chave))
 pal_romana = input()
 print(alfabeto.cifra(pal_romana, chave))
-
 '''
+
+'''#Questao 3 - Detector de Plágio
+class Letra:
+    def __init__(self, id):
+        self.id = id
+        self.next = None
+class Texto:
+    def __init__(self):
+         self.head = self.new_list()
+    
+    def new_list(self):
+        return None
+    
+    def append(self, letra):
+        if self.head == None:
+            self.head = letra
+        else:
+            tmp = self.head
+            while tmp.next != None:
+                tmp = tmp.next
+            tmp.next = letra
+    
+    def find_plagio(self, text1):
+        plagio = False
+        letra2 = self.head
+        i = 0
+        while letra2.next != None and plagio == False: #primeira camada é o texto do autor (original)
+            letra1 = text1.head #aqui dá pra melhorar tbm para nao ficar repetindo toda vez
+            if letra1.id == letra2.id: #deu match da 1ª letra do texto a ser analisado com a do texto original
+                while letra1.next != None and letra2.next != None:#confere se as proximas letras dao match
+                    letra1 = letra1.next
+                    letra2 = letra2.next #N estou conferindo se os textos terminaram, que daria erra pois objeto seria None
+                    if letra1.id != letra2.id:
+                        plagio = False
+                        break
+                    else:#essa repetiçao nao está boa. dá pra melhorar
+                        plagio = True
+                if letra1.next == None and plagio == True:
+                    break
+                elif letra1.next != None and letra2.next == None:
+                    plagio = False
+                    break
+            else:
+                letra2 = letra2.next
+            i += 1
+        if plagio == True:
+            return f"Plagio encontrado na posicao {i}!"
+        else:
+            return "Nenhum plagio detectado!"
+        
+
+text1 = Texto()
+text2 = Texto()
+for i in input():
+    l = Letra(i)
+    text1.append(l)
+for i in input():
+    l = Letra(i)
+    text2.append(l)
+print(text2.find_plagio(text1))
+'''
+
+'''#Questao 4 - Multilista'''
+
+
+class Pessoa:
+    def __init__(self, nome, idade):
+        self.nome = nome
+        self.idade = idade
+        self.next_pessoa = None
+        self.next_idade = None
+    
+class Multilista:
+    
