@@ -1,0 +1,23 @@
+85 20
+1 6 H
+0 0 V
+0 0 X
+0 0 R
+1 20 D
+1 21 A
+0 0 U
+1 18 U
+1 10 W
+0 0 D
+1 25 E
+0 0 I
+0 0 T
+1 2 X
+1 7 Z
+1 1 *
+1 20 +
+0 0 H
+1 10 K
+1 5 L
+
+esse teste me ajudou a identificar um bug na linha 213
