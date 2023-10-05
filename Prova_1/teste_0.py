@@ -96,7 +96,7 @@ class Letra:
         self.roman = rom
         self.prev = None
         self.next = None
-
+        
 class Alfabet:
     def __init__(self):
         self.head = self.new_list()
@@ -224,15 +224,211 @@ for i in input():
 print(text2.find_plagio(text1))
 '''
 
-'''#Questao 4 - Multilista'''
-
+'''#Questao 4 - Multilista
 
 class Pessoa:
     def __init__(self, nome, idade):
         self.nome = nome
         self.idade = idade
-        self.next_pessoa = None
-        self.next_idade = None
+        self.next_n = None
+        self.next_i = None
     
 class Multilista:
+    def __init__(self):
+        self.head_n = self.new_list()
+        self.head_i = self.new_list()
+    def new_list(self):
+        return None
     
+    def insert(self, pessoa):
+        if self.head_n == None and self.head_i == None:
+            self.head_n = pessoa
+            self.head_i = pessoa
+        else:
+            #classificacao para nome
+            pessoa_tmp = self.head_n
+            while pessoa_tmp.next_n != None:
+                if pessoa.nome > pessoa_tmp.next_n.nome:
+                    pessoa_tmp = pessoa_tmp.next_n
+                else:
+                    break
+            #nome da pessoa adicionada é menor que a da 2 pessoa ou só tem um elemento no conjunto
+            if pessoa_tmp == self.head_n:
+                if pessoa.nome > self.head_n.nome:
+                    pessoa.next_n = self.head_n.next_n
+                    self.head_n.next_n = pessoa
+                else:
+                    pessoa.next_n = self.head_n
+                    self.head_n = pessoa
+            else:
+                pessoa.next_n = pessoa_tmp.next_n
+                pessoa_tmp.next_n = pessoa
+                
+            #classificacao para idade
+            pessoa_tmp = self.head_i
+            while pessoa_tmp.next_i != None:
+                if pessoa.idade > pessoa_tmp.next_i.idade:
+                    pessoa_tmp = pessoa_tmp.next_i
+                else:
+                    break
+            #idade da pessoa adicionada é menor que a da 2 pessoa ou só tem um elemento no conjunto
+            if pessoa_tmp == self.head_i:
+                if pessoa.idade > self.head_i.idade:
+                    pessoa.next_i = self.head_i.next_i
+                    self.head_i.next_i = pessoa
+                else:
+                    pessoa.next_i = self.head_i
+                    self.head_i = pessoa
+            else:
+                pessoa.next_i = pessoa_tmp.next_i
+                pessoa_tmp.next_i = pessoa 
+    def display(self):
+        p = self.head_n
+        i = self.head_i
+        while p != None:
+            print(f"{p.nome} {p.idade} | {i.nome} {i.idade}")
+            p = p.next_n
+            i = i.next_i
+            
+            
+
+n = int(input())
+conjunto = Multilista()
+for pessoa in np.arange(n):
+    nome, idade = input().split()
+    idade = int(idade)
+    pessoa = Pessoa(nome, idade)
+    conjunto.insert(pessoa)
+conjunto.display()
+'''
+
+#Questao 6 - Gerenciador de Memoria
+
+class Bloco:
+    def __init__(self):
+        self.id = "0"
+        self.pos = None
+        self.next = None
+class Memoria:
+    def __init__(self, tam):
+        self.head = None
+        self.new(tam)
+        
+    def new(self, tam):
+        bloco_tmp = Bloco()
+        bloco_tmp.pos = 0
+        self.head = bloco_tmp
+        for i in np.arange(1, tam):
+            bloco_i = Bloco()
+            bloco_i.pos = i
+            bloco_tmp.next = bloco_i
+            bloco_tmp = bloco_i
+    def insert(self, op, q, id, tam):
+        alocado = ""
+        liberado = ""
+        bloco_i = self.head
+        while (alocado != "True" or alocado != "False") and (liberado != "True" or liberado != "False"):
+            #opcao de alocaçao
+            if op == 1:
+                #procura um espaço de memoria vazio
+                while bloco_i.id != "0":
+                    bloco_i = bloco_i.next
+                #encontrou
+                if bloco_i.id == "0":
+                    pos_ini = bloco_i.pos
+                    #calcula tamanho do bloco de memoria livre
+                    while bloco_i.id == "0" and bloco_i.next != None:
+                        bloco_i = bloco_i.next
+                    pos_fin = bloco_i.pos
+                    #verifica se tem espaco no bloco encontrado para alocar o novo bloco
+                    #q é o tamanho do novo bloco
+                    if q <= (pos_fin-pos_ini):
+                        bloco_ini = self.head
+                        #volta para o inicio do bloco que contem espaço suficiente
+                        while bloco_ini.pos != pos_ini:
+                            bloco_ini = bloco_ini.next
+                        bloco_fin = bloco_ini
+                        #preenche os ids dos espaços necessarios de memoria do bloco com o id do input
+                        i = 0
+                        for i in np.arange(q):
+                            bloco_fin.id = id
+                            bloco_fin = bloco_fin.next
+                        alocado = "True"
+                        break
+                    #se nao tiver espaço neste bloco
+                    else:
+                        #verifica se já é o ultimo bloco de memoria
+                        if pos_fin == tam:
+                            alocado = "False"
+                            break
+                        #se nao for, procura proximo bloco vazio
+                        else:
+                            if tam - pos_fin > q:
+                                break
+                            else:
+                                continue
+                #memoria cheia
+                else:
+                    alocado = "False"
+                    break
+            #opcao de liberaçao
+            if op == 0:
+                #procura um espaço de memoria ocupado pelo id
+                while bloco_i.id != id and bloco_i.next != None:
+                    bloco_i = bloco_i.next
+                #encontrou um id ocupando memoria
+                if bloco_i.id == id:
+                    while bloco_i.id == id:
+                        bloco_i.id = "0"
+                        bloco_i = bloco_i.next
+                    liberado = "True"
+                    break
+                #nenhum id correspondente ocupando memoria
+                else:
+                    liberado = "False"
+                    break
+    def display(self, tam): #tam é pra facilitar o codigo, mas nao é o ideal
+        bloco = self.head
+        ocupada = 0
+        free = 0
+        saida = ""
+        while bloco != None:
+            if bloco.next != None:
+                if bloco.id == bloco.next.id:
+                    if bloco.id != "0":
+                        ocupada += 1
+                    else:
+                        free += 1
+                else:
+                    if bloco.id != "0":
+                        ocupada += 1
+                    else:
+                        free += 1
+                    saida += bloco.id
+                    saida += " "
+                bloco = bloco.next
+                continue
+            #esse if e else aqui repetindo nao ficou bom
+            if bloco.id != "0":
+                ocupada += 1
+            else:
+                free += 1
+            saida += bloco.id
+            bloco = bloco.next #None
+        print(saida)
+        print(ocupada)
+        print(free)
+            # #ultimo diferente do penultimo
+            # if (tam - (ocupada+free)) == 1:
+            #     saida += bloco.id
+            # else:
+            #     saida +=
+            # bloco = bloco.next #None
+tam, n = map(int, input().split())
+mem = Memoria(tam)
+for i in np.arange(n):
+    op, q, id = input().split()
+    op = int(op)
+    q = int(q)
+    mem.insert(op, q, id, tam)
+mem.display(tam)
