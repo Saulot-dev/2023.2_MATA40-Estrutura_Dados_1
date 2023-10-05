@@ -288,13 +288,19 @@ class Memoria:
                 saida.append(int(b.id))
             else:
                 saida.append(b.id)
-            # saida.append(" ")
             b = b.next
         if b.id == "0":
             saida.append(int(b.id))
         else:
             saida.append(b.id)
-        print(*saida)
+        #COLOCAREI um codigo para remover ids de blocos ocupados duplicados
+        saida_nova = []
+        for i in saida:
+            if i in saida_nova:
+                continue
+            else:
+                saida_nova.append(i)
+        print(*saida_nova)
         print(self.ocupada)
         print(self.livre)
 max, n = map(int, input().split())
