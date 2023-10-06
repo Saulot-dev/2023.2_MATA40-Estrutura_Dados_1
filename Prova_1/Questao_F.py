@@ -296,11 +296,11 @@ class Memoria:
         #COLOCAREI um codigo para remover ids de blocos ocupados duplicados
         saida_nova = []
         for i in saida:
-            if i in saida_nova:
+            if i in saida_nova and i != 0:
                 continue
             else:
                 saida_nova.append(i)
-        print(*saida_nova)
+        print(*saida)
         print(self.ocupada)
         print(self.livre)
 max, n = map(int, input().split())
