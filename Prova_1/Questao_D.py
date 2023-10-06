@@ -1,7 +1,8 @@
-import numpy as np
 #Questao 4 - Multilista
 
-class Pessoa:
+import numpy as np
+
+class No:
     def __init__(self, nome, idade):
         self.nome = nome
         self.idade = idade
@@ -15,48 +16,51 @@ class Multilista:
     def new_list(self):
         return None
     
-    def insert(self, pessoa):
-        if self.head_n == None and self.head_i == None:
-            self.head_n = pessoa
-            self.head_i = pessoa
+    def insert_n(self, no):
+        if self.head_n == None:
+            self.head_n = no
         else:
-            #classificacao para nome
-            pessoa_tmp = self.head_n
-            while pessoa_tmp.next_n != None:
-                if pessoa.nome > pessoa_tmp.next_n.nome:
-                    pessoa_tmp = pessoa_tmp.next_n
-                else:
-                    break
-            #nome da pessoa adicionada é menor que a da 2 pessoa ou só tem um elemento no conjunto
-            if pessoa_tmp == self.head_n:
-                if pessoa.nome > self.head_n.nome:
-                    pessoa.next_n = self.head_n.next_n
-                    self.head_n.next_n = pessoa
-                else:
-                    pessoa.next_n = self.head_n
-                    self.head_n = pessoa
+            tmp = self.head_n
+            if no.nome < tmp.nome:
+                no.next_n = tmp
+                self.head_n = no
+            elif tmp.next_n != None:
+                inseriu = False
+                while tmp.next_n != None:
+                    if no.nome < tmp.next_n.nome:
+                        no.next_n = tmp.next_n
+                        tmp.next_n = no
+                        inseriu = True
+                        break
+                    else:
+                        tmp = tmp.next_n
+                if not inseriu:
+                    tmp.next_n = no
             else:
-                pessoa.next_n = pessoa_tmp.next_n
-                pessoa_tmp.next_n = pessoa
-                
-            #classificacao para idade
-            pessoa_tmp = self.head_i
-            while pessoa_tmp.next_i != None:
-                if pessoa.idade > pessoa_tmp.next_i.idade:
-                    pessoa_tmp = pessoa_tmp.next_i
-                else:
-                    break
-            #idade da pessoa adicionada é menor que a da 2 pessoa ou só tem um elemento no conjunto
-            if pessoa_tmp == self.head_i:
-                if pessoa.idade > self.head_i.idade:
-                    pessoa.next_i = self.head_i.next_i
-                    self.head_i.next_i = pessoa
-                else:
-                    pessoa.next_i = self.head_i
-                    self.head_i = pessoa
+                tmp.next_n = no
+    def insert_i(self, no):
+        if self.head_i == None:
+            self.head_i = no
+        else:
+            tmp = self.head_i
+            if no.idade < tmp.idade:
+                no.next_i = tmp
+                self.head_i = no
+            elif tmp.next_i != None:
+                inseriu = False
+                while tmp.next_i != None:
+                    if no.idade < tmp.next_i.idade:
+                        no.next_i = tmp.next_i
+                        tmp.next_i = no
+                        inseriu = True
+                        break
+                    else:
+                        tmp = tmp.next_i
+                if not inseriu:
+                    tmp.next_i = no
             else:
-                pessoa.next_i = pessoa_tmp.next_i
-                pessoa_tmp.next_i = pessoa 
+                tmp.next_i = no
+            
     def display(self):
         p = self.head_n
         i = self.head_i
@@ -68,10 +72,11 @@ class Multilista:
             
 
 n = int(input())
-conjunto = Multilista()
-for pessoa in np.arange(n):
+lista = Multilista()
+for i in np.arange(0, n):
     nome, idade = input().split()
     idade = int(idade)
-    pessoa = Pessoa(nome, idade)
-    conjunto.insert(pessoa)
-conjunto.display()
+    no = No(nome, idade)
+    lista.insert_n(no)
+    lista.insert_i(no)
+lista.display()
