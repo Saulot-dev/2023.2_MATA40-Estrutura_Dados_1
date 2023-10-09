@@ -7,6 +7,13 @@ import numpy as np
     # Ao limpar um bloco ocupado, eu estava checando se o proximo estava livre pra aglutinar,
     # porém eu nao estava prevendo o caso em que o bloco está entre dois espaços lires, pois existe essa possibilidade.
     # Vou alterar somente a saída(dentro do display) para eliminar 0s duplicados tambem E DEPOIS EU CONSERTO O ALGORITMO.
+
+
+# Fazer essa poha com lista duplamente encadeada, pensei que só poderia fazer 
+# com encadeada simples. Mas, so far, encontrei o erro com o ultimo exemplo de entrada,
+# na linha 60
+
+
 class Bloco:
     def __init__(self, id, tam):
         self.id = id
@@ -33,8 +40,7 @@ class Memoria:
                 self.head = b_in
                 #update memoria free
                 b_in.next.t -= b_in.t
-                self.busy += b_in.t
-                self.free -= b_in.t
+                self.update_mem("busy", b_in.t)
             #else: nada acontece pois memoria está toda ocupada
         else:
             #casos em que memoria nao está toda livre nem toda cheia
@@ -48,7 +54,12 @@ class Memoria:
                         #caso tenha mais tamanho que o necessario para alocar novo bloco
                         if tmp.t > b_in.t:
                             h = self.find_prev(tmp)
-                            h.next = b_in
+                            
+                            if h != None:
+                                h.next = b_in
+                            #o erro estava aqui. pois h só é None, se h=tmp=self.head
+                            else:
+                                self.head = b_in
                             b_in.next = tmp
                             tmp.t -= b_in.t
                             self.update_mem("busy", b_in.t)
@@ -68,13 +79,13 @@ class Memoria:
                     tmp = tmp.next            
             # else: nada será feito pois nao tem memoria livre suficiente
     
-    def libera(self, b_free):
-        #nao esquecer do caso 0 X 0 && b_free.id = X
+    def libera(self, id):
+        #nao esquecer do caso 0 X 0 && id = X
         tmp = self.head
         #para garantir, vou percorrer a lista inteira
         while tmp != None:
             #caso encontre o bloco a ser liberado
-            if tmp.id == b_free.id:
+            if tmp.id == id:
                 tmp.id = "0"
                 self.update_mem("free", tmp.t)
                 #aglutina bloco posterior
@@ -82,19 +93,25 @@ class Memoria:
                     if tmp.next.id == "0":
                         tmp.t += tmp.next.t
                         tmp.next = tmp.next.next
-                #aglutina bloco anterior
+                #aglutina bloco anterior, caso exista
                 prev = self.find_prev(tmp)
-                if prev.id == "0":
-                    prev.t += tmp.t
-                    prev.next = tmp.next 
+                #aqui tava dando runtime error
+                if prev != None:
+                    if prev.id == "0":
+                        prev.t += tmp.t
+                        prev.next = tmp.next 
                 break
             tmp = tmp.next
             #else: segue o loop
     #busca o no anterior ao no em questao para fazer o link corretamente
     def find_prev(self, tmp):
         h = self.head
-        while h.next != tmp:
-            h = h.next
+        # tmp é self.head.
+        if h == tmp:
+            return None
+        else:
+            while h.next != tmp:
+                h = h.next
         return h
     #atualiza quantidade de memoria livre ou ocupada de acordo com a funcao (insert ou libera)
     def update_mem(self, op, t):
@@ -108,9 +125,15 @@ class Memoria:
     def display(self):
         tmp = self.head
         while tmp.next != None:
-            print(tmp.id, end=" ")
+            if tmp.id == "0":
+                print(int(tmp.id), end=" ")
+            else:
+                print(tmp.id, end=" ")
             tmp = tmp.next
-        print(tmp.id)
+        if tmp.id == "0":
+            print(int(tmp.id))
+        else:
+            print(tmp.id)
         print(self.busy)
         print(self.free)
         
@@ -120,9 +143,9 @@ for i in np.arange(n):
     op, tam, id = input().split()
     op = int(op)
     tam = int(tam)
-    b = Bloco(id, tam)
     if op == 1:
+        b = Bloco(id, tam)
         mem.insert(b)
     elif op == 0:
-        mem.libera(b)
+        mem.libera(id)
 mem.display()
