@@ -1,0 +1,63 @@
+B - Escalonador de Processos [fila dinamica]
+	-Como iterar uma variável alfabeticamente de A a Z
+		-Usando funcoes built-in chr() e ord()
+
+	-Input
+		-Somatório do tempo
+			-self.tempo_total
+			-A e B, que estao em unidade de tempo -> segundos
+		-Pilha
+			-Elementos
+				-Propriedaddes
+					-Tempo de execucao
+						-Int's que estao em unidade de tempo -> segundos
+					-Id's (A a Z)
+				-ponteiro para prox
+			-Ponteiro Head
+			-Ponteiro Tail
+		-Script
+			1)Input A e B
+			Input na fila head,next,tail = No(id, tempo)
+			2)input head
+			3)input x (self.head.next == None)
+				if not self.head.next
+					-x.id = 
+					-self.head.next = x
+					-self.tail = x
+			4)input x (self.tail) #x.next = None
+				-self.tail.next = x
+				-self.tail = x
+				
+				
+	-Update(self)
+		-Percorre a lista atualizando-a (loop/funcao)
+			-if self.head.tempo >= A (tempo limite de execuçao do programa)
+				-self.tempo_total += A+B
+				-self.head.tempo -= A
+				#tira self.head da fila
+				-if self.head.tempo <= 0
+					-if self.head.next == None
+						-self.output()	
+					-else
+						-self.head = self.head.next
+						-self.update()
+				#joga pro final da fila (ainda tem tempo)
+				-else
+					-if self.head.next == None
+						-self.update()	
+					-else
+						-self.tail.next = self.head
+						-self.tail = self.head
+						-temp = self.head.next
+						-self.head.next = None
+						-self.head = temp
+						-self.updaet()
+			-else tempo do processo < A (tempo limite de execuçao do programa)
+				-self.tempo_total += self.head.tempo
+				-if self.head.next == None
+					-self.output()
+				-else
+					self.head = self.head.next
+					update()
+	-Output(self)
+		-print(self.head.id, " ", self.tempo_total)

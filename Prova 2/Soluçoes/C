@@ -1,0 +1,97 @@
+# a intencao é:
+    #achar os nós; definir qual o maior;
+    #a partir daí, buscar na subárvore à esquerda deste;
+    #se nao achar, sobe para o pai do maior;
+    #repetir linhas 3 e 4
+
+class No:
+    def __init__(self, id):
+        self.id = id
+        self.e = None
+        self.d = None
+        self.p = None
+
+class Arvore:
+    def __init__(self):
+        self.raiz = self.new_tree()
+    
+    def new_tree(self):
+        return None
+    
+    def clear_tree(self):
+        self.raiz = None
+
+    def add(self, r, no):
+        if self.raiz == None:
+            self.raiz = no
+        else:
+            if no.id <= r.id: # testa se esquerda
+                if r.e == None:
+                    r.e = no
+                    no.p = r
+                else:
+                    self.add(r.e, no)
+            else: # testa se direita
+                if r.d == None:
+                    r.d = no
+                    no.p = r
+                else:
+                    self.add(r.d, no)
+    
+    def find_id(self, r, id):
+        if r:
+            if id == r.id:
+                return r
+            no_id = self.find_id(r.e, id)
+            if no_id:
+                return no_id
+            no_id = self.find_id(r.d, id)
+            if no_id:
+                return no_id
+            
+    def ancestral_comum_mais_proximo(self, r, x, y):
+        no_x = self.find_id(r, x)
+        no_y = self.find_id(r, y)
+        if not no_x and not no_y:
+            return "NENHUM"
+        elif no_x and not no_y:
+            return x
+        elif no_y and not no_x:
+            return y
+        #caso encontre ambos
+        #tem que procurar pai
+        else:
+            if x > y:
+                maior = no_x
+                menor = no_y
+            else:
+                maior = no_y
+                menor = no_x
+            while 1: #vai achar obrigatoriamente, pois x e y estao na arvore
+                if maior == menor: #gambiarra pra otimizar enviando so o maior.e na funcao find_id. nao procurar do lado direito...
+                    # maior = maior.p quem diria que a definicao de ancestral mudou...
+                    break
+                achou = self.find_id(maior.e, menor.id) 
+                if achou:
+                    break
+                maior = maior.p
+            return maior.id
+
+
+n = int(input())
+a = Arvore()
+for i in input().split():
+    id = int(i)
+    no = No(id)
+    a.add(a.raiz, no)
+x, y = map(int, input().split())
+#casos em que ou x ou y é raiz, portanto um é pai do outro(nao tem pai em comum)
+#vou fazer sem esperar que um dos dois possa ser o ancestral comum, pois nao faz sentido
+#De acordo com o exemplo 2, nao só x pode ser ancestral de si proprio, como pode estar na
+#raiz da árvore...
+if x == a.raiz.id:
+    print(x)
+elif y == a.raiz.id:
+    print(y) 
+else:
+    print(a.ancestral_comum_mais_proximo(a.raiz, x, y))
