@@ -7,10 +7,10 @@
 #todo
     #fix down
 
-class No:
+class Node:
     def __init__(self, id, pri):
         self.id = id
-        self.pri = int(pri) #priority
+        self.pri = pri #priority
         self.left = None
         self.right = None
         self.father = None
@@ -46,29 +46,29 @@ class MiniHeap:
         if self.root == None:
             self.root = node
         else:
-            self.insert_subtree(self.root, node)
+            self.insert_subtree(node)
     
     def insert_subtree(self, node):
-        temp_root = self.last_father()
-        if not temp_root.left:
-            temp_root.left = node
-        elif not temp_root.right: #elif redundant
-            temp_root.right = node
-        node.father = temp_root
+        last_root = self.last_root()
+        if not last_root.left:
+            last_root.left = node
+        elif not last_root.right: #elif redundant
+            last_root.right = node
+        node.father = last_root
         self.fix_up(node)
 
     def fix_up(self, node): #if father's pri > son's, change. Recursive
         if node.father:
             if node.pri < node.father.pri:
-                temp_son = (node.father.id, node.father.pri)
+                temp_son = Node(node.father.id, node.father.pri)
                 #exchange
-                node.father.id = node.pri
-                node.father.pri = node.id
+                node.father.id = node.id
+                node.father.pri = node.pri
                 node.id = temp_son.id
                 node.pri = temp_son.pri
                 self.fix_up(node.father)
 
-    def last_father(self): #find last element in Heap
+    def last_root(self): #find last element in Heap
         que = Queue()
         que.enqueue(QNode(self.root))
         #search for an empty slot in the heap, lvl by lvl
@@ -83,8 +83,40 @@ class MiniHeap:
             else: #empty slot left
                 return temp_root
             
+    def change_root(self):
+        last_root = self.last_root()
+        if last_root.right:
+            new_root = Node(last_root.right.id, last_root.right.pri)
+            last_root.right = None
+        elif last_root.left: #elif redundant
+            new_root = Node(last_root.left.id, last_root.left.pri)
+            last_root.left = None
+        self.root.id = new_root.id
+        self.root.pri = new_root.pri
+
     #if son's pri (wich one(left/right)) < father's, change. Recursive
-    #def fix_down(self, r):
+    def fix_down(self, root):
+        if root.left:
+            if root.right:
+                if root.pri > root.left.pri or root.pri > root.right.pri:
+                    if root.left.pri < root.right.pri:
+                        minor = root.left
+                    else:
+                        minor = root.right
+                    temp_father = Node(root.id, root.pri)
+                    root.id = minor.id
+                    root.pri = minor.pri
+                    minor.id = temp_father.id
+                    minor.pri = temp_father.pri
+                    self.fix_down(minor)
+            elif root.pri > root.left.pri:
+                minor = root.left
+                temp_father = Node(root.id, root.pri)
+                root.id = minor.id
+                root.pri = minor.pri
+                minor.id = temp_father.id
+                minor.pri = temp_father.pri
+                self.fix_down(minor)
 
     
     def preorder(self, r):
@@ -99,9 +131,11 @@ h = MiniHeap()
 count = 0
 for i in range(n):
     id, pri = input().split()
-    node = No(id, pri)
+    node = Node(id, int(pri))
     count += 1
     h.insert(node)
-    """ if count == q:
-        count = 0 """
+    if count == q:
+        h.change_root()
+        h.fix_down(h.root)
+        count = 0
 h.preorder(h.root)

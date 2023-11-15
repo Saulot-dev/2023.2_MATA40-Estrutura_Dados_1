@@ -152,15 +152,8 @@ for i in range(n):
     pri = int(pri)
     no = No(id, pri)
     count += 1
-    # adiciona com completude (min-heap) 
     h.inserir(no)
     if count == q:
-        # executa processo de maior prioridade
-        # remove processo de maior prioridade na árvore
-        # fix down
-        #enviar o ultimo elemento da heap para h.fix_down()
-        #CONSERTAR, FAZER FUNCAO PRA PEGAR O ULTIMO E COLOCAR NA RAIZ
-        #DEPOIS FAZER O FIX DOWN
         ultimo = h.find_last()
         h.fix_down(h.raiz)
         count = 0
