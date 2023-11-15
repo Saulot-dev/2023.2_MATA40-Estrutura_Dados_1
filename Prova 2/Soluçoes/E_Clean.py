@@ -71,7 +71,7 @@ class MiniHeap:
     def last_root(self): #find last element in Heap
         que = Queue()
         que.enqueue(QNode(self.root))
-        #search for an empty slot in the heap, lvl by lvl
+        #search for a root with an empty slot in the heap, lvl by lvl
         while 1:
             temp_root = (que.dequeue()).node
             if temp_root.left:
@@ -83,16 +83,39 @@ class MiniHeap:
             else: #empty slot left
                 return temp_root
             
+    def last_node(self): #find last element in Heap
+        que = Queue()
+        que.enqueue(QNode(self.root))
+        #search for the last node in the heap, lvl by lvl
+        while 1:
+            temp_root = (que.dequeue()).node
+            if temp_root.left:
+                que.enqueue(QNode(temp_root.left))
+                if temp_root.right:
+                    que.enqueue(QNode(temp_root.right))
+                else: #end of heap
+                    back = que.front
+                    while back.next:
+                        back = back.next
+                    return back.node
+            else: #end of heap
+                back = que.front
+                while back.next:
+                    back = back.next
+                return back.node
+            
     def change_root(self):
-        last_root = self.last_root()
-        if last_root.right:
-            new_root = Node(last_root.right.id, last_root.right.pri)
-            last_root.right = None
-        elif last_root.left: #elif redundant
-            new_root = Node(last_root.left.id, last_root.left.pri)
-            last_root.left = None
-        self.root.id = new_root.id
-        self.root.pri = new_root.pri
+        last_node = self.last_node()
+        id = last_node.id
+        pri = last_node.pri
+        #pop last node from heap
+        if last_node.father.right == last_node:
+            last_node.father.right = None
+        elif last_node.father.left == last_node: #elif redundant
+            last_node.father.left = None
+        #exchange
+        self.root.id = id
+        self.root.pri = pri
 
     #if son's pri (wich one(left/right)) < father's, change. Recursive
     def fix_down(self, root):
@@ -118,10 +141,9 @@ class MiniHeap:
                 minor.pri = temp_father.pri
                 self.fix_down(minor)
 
-    
     def preorder(self, r):
         if r:
-            print(f'{r.id} {r.pri}')
+            print(f'{r.id}', end=" ")
             self.preorder(r.left)
             self.preorder(r.right)
 
